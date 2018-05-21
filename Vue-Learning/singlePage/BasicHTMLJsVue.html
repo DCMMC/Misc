@@ -1,0 +1,440 @@
+<!-- 本源文件主要是 html 基础, js 基础和 vue 基础的一些笔记 -->
+<!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- html 是一种不太严谨的类 xml 标记性语言(因为有时候就算没有正确的按照 xml 书写, 一样可以正常被浏览器
+  解析, 而 XHTML 就是相对严谨的 html) -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- 用于插入 script, CSS, meta -->
+
+<head>
+  <meta charset="utf-8">
+  <!-- user-scalable=0 表示不允许用户自己放大 -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimal-ui,user-scalable=0;">
+  <meta name="author" content="DCMMC">
+  <!--
+	  base 定义所有链接地址(相对地址)的基地址, target 为 _blank 的时候新窗口打开, 默认是当前
+    窗口打开
+    <base href="//localhost/" target="_blank">
+  -->
+  <title>vue - Hello World</title>
+  <!-- URL 规范:
+  {scheme:}//{host.}domain{:port}{/path/filename} 
+  其中 {} 中的是可省略的部分, domain 可以是 ip 也可以是网址
+  scheme 定义因特网类型, e.g. http, https, ftp, file, MAILTO
+  URL 只能使用 ASCII 字符, 非 ASCII 必须转义(%xx), js/php/java 都有类似 urldecode 和 urlencode 函数
+  URL 中的空格经常用 + 代替
+  -->
+  <!-- 兼容 IE11, 在 vue 之前依赖 polyfill 来实现 Promise -->
+  <script src="https://qa.polyfill.io/v2/polyfill.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+  <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+  <!-- 以下注释会在 IE <= 9 时读取并解析, 用来为老版本IE添加将 HTML5 元素 -->
+  <!--[if lt IE 9]>
+	    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+  <!--
+    style 标签定义样式
+    link 通常用来链接外部 CSS 文件
+    e.g. <link rel="stylesheet" type="text/css" href="/statics/demosource/styles.css"> 
+    -->
+  <!-- <style>
+    p {
+      font-size: 18px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  </style> -->
+</head>
+<!-- View 层 -->
+
+<body>
+  <div id="app">
+    <!-- html 大小写不敏感, 不过推荐小写 -->
+    <!-- 标题 h1 - h7 依次大小递减 -->
+    <!-- {{}} 中包围的是 vue 语法(有点类似字符串模板), vue 会根据里面的 js 代码渲染到 DOM 树中, 并且
+    这些东西都是响应式的, 也就是会实时更新 -->
+    <h2> {{ message }} </h2>
+    <!-- Vue 的双向绑定, 使用 v-model 指令对 input 的内容双向绑定到 Vue 实例中 data 中的 message -->
+    <!-- 把 {{ message }} 改成 {{* message }} 就可以使上面不会因为 input 的变化为变化 -->
+    <!-- 还支持一些简单的js表达式 -->
+    <h2> {{ message.split('').reverse().join('') }}</h2>
+    <input v-model="message" />
+    <!-- hr 空元素标签用于表示水平分割线-->
+    <hr/>
+
+    <!-- html 中很多符号需要转义(escape), 成为实体（Entities）-->
+    <p> &lt;p&gt; 段落
+      <br /> 换行标签 &lt;br /&gt; 这种是空元素, 空元素用 /&gt; 表示结束标签</p>
+    <br/>
+    <br/>
+
+    <!-- href, target 被称为属性, 都是值键对的形式, html 有全局属性(也就是说所有元素都有的属性)
+    其中最常用的就是 class 属性, 为 html 定义一个或多个类名(类名在CSS样式表里面)
+    还有就是 id, 定义元素的唯一 id, 用来在 js 用访问.
+    还有 style 行内样式 -->
+    <!-- href 的值设置为 "#" 表示空链接, 还可以设置为 "#" 好接一个id 或者其他链接＋"#"+一个id, 表示转跳到指定id-->
+    <a href="#app" target="_blank">Link</a>
+    <br/>
+    <br/>
+
+    <hr/>
+    <h2>
+      <b>文本格式化:</b>
+      <br/>
+      <br/>
+    </h2>
+    <i>斜体</i>
+    <br/>
+    <br/>
+    <code>code: int main(void) {}</code>
+    <br/>
+    <br/> 这是
+    <sub> 下标</sub> 和
+    <sup> 上标</sup>
+    <br/>
+    <br/>
+    <small>小字号</small>
+    <br/>
+    <br/>
+    <del>删除字</del>
+    <br/>
+    <br/>
+    <strong>加重语气</strong>
+    <br/>
+    <br/>
+    <em>着重文字</em>
+    <br/>
+    <br/>
+    <ins>插入字(下划线)</ins>
+    <br/>
+    <br/>
+    <!-- abbr 缩写 -->
+    <p>The
+      <abbr title="World Health Organization">WHO</abbr> was founded in 1948.</p>
+    <!-- 文献引用 -->
+    <p>
+      <cite>The Scream</cite> by Edward Munch. Painted in 1893.</p>
+    <p>长引用:</p>
+    <blockquote cite="http://www.worldwildlife.org/who/index.html" style="text-align:right;font-size: 20px;">
+      For 50 years, WWF has been protecting the future of nature. The worlds leading conservation organization, WWF works in 100
+      countries and is supported by 1.2 million members in the United States and close to 5 million globally.
+    </blockquote>
+    <!-- 显示方向 bdo 属性 dir 的值为 rtl 或 ltr -->
+    <p>
+      <bdo dir="rtl">该段落文字从右到左显示。</bdo>
+    </p>
+    <!-- 其他还有很多格式化文本用的标签查看 https://www.w3cschool.cn/html/html-formatting.html -->
+
+    <!-- 图片, alt 用于图片没有加载出来的时候的占位字符串, 还有 width 和 height 属性 usemap 将会绑定图片的点击映射到指定的 map,
+    里面用的是绑定的map的 id 或者 name(取决于浏览器, 最好都定义一下)
+    把 img 放在链接标签 a 中就可以作为图片链接 -->
+    <img src="https://www.w3cschool.cn/statics/images/course/pulpit.jpg" awidth="304" height="228" lt="一张图片" usemap="#urlOfPic"
+    />
+    <br/>
+    <br/>
+    <!-- map 必须跟 area 一起使用, 主要是用来对图片中特定区域的地方的点击操作执行不同的 -->
+    <map name="urlOfPic" id="urlOfPic">
+      <!-- area 定义图像地图中的可点击区域 -->
+      <area shape="rect" href="#app" coords="0,0,228,304" />
+    </map>
+
+    <!-- 表格 属性 border 设置每一个 cell 的边界宽度 -->
+    <hr/>
+    <h2>表格:</h2>
+    <table border="1">
+      <!-- 标题行 -->
+      <tr>
+        <!-- header cell -->
+        <th>Data1</th>
+        <th>Data2</th>
+        <th>Data3</th>
+      </tr>
+      <!-- tr 表示行-->
+      <tr>
+        <!-- td 表示列 -->
+        <td>100</td>
+        <td>200</td>
+        <td>300</td>
+      </tr>
+      <tr>
+        <td>400</td>
+        <td>500</td>
+        <td>600</td>
+      </tr>
+    </table>
+
+    <!-- 用 rowspan 和 colspan 属性指定跨多列和跨多行, 用cellspacing设置单元格间距
+    thead, tfoot 和 tbody 分别是表格的页眉页脚和主体 -->
+    <br/>
+    <table border="1" cellspacing="0">
+      <tr>
+        <th>First</th>
+        <th>Name</th>
+        <th>: </th>
+        <td>Bill Gates</td>
+      </tr>
+      <tr>
+        <th rowspan="2" colspan="3">Telephone:</th>
+        <td>555 77 854</td>
+      </tr>
+      <tr>
+        <td>555 77 855</td>
+      </tr>
+    </table>
+
+    <!-- 列表, 列表可以嵌套 -->
+    <hr/>
+    <h2>列表</h2>
+    <b>无序列表</b>
+    <br/>
+    <br/>
+    <ul>
+      <!-- li 表示 list item -->
+      <li>Coffee</li>
+      <li>Milk</li>
+    </ul>
+    <br/>
+    <b>有序列表</b>
+    <br/>
+    <br/>
+    <ol>
+      <!-- vue 迭代器, v-开头的都是vue指令, v-for 这个属性的值就是 js 代码 -->
+      <li v-for="todo in todos"> {{ todo.text }} </li>
+    </ol>
+    <b>描述列表</b>
+    <br/>
+    <br/>
+    <dl>
+      <!-- dt 和 dd 分别表示条目和描述, 一个条目有0个或多个描述 -->
+      <dt>Term1</dt>
+      <dd>- description1</dd>
+      <dd>- description2</dd>
+    </dl>
+
+    <!-- 区块 -->
+    <!-- 大多数的 html 元素可以分为两类: 块级元素和内联元素, 块级元素会自动换行而内联元素不会
+    标签 div 和 span 分别用来定义创建块级(block-level)元素和内联(inline)元素, 基本的布局就是用
+    div 和 span 实现的 -->
+    <div id="app-2">
+      <span>
+        <!-- vue 指定 bind 可以绑定元素属性到 Vue 实例的数据 -->
+        <!-- title 是一个通用属性, 鼠标停留的时候展示 tips, 后面的 tips 是 Vue 实例的一个数据类型 -->
+        <span v-bind:title="tips">
+          鼠标悬停几秒钟查看此处动态绑定的提示信息！
+        </span>
+        <!-- vue if 指令 -->
+        <p v-if="seen">现在你看到我了</p>
+        <!-- vue show 指令, 类似 if, 不过不同的是v-show的元素会始终渲染并保持在 DOM 中,且v-show不支持<template>标签 -->
+        <!-- vue 的管道类似于 Linux 管道, uppercase 是内置过滤器, 而 reverse 是自定义过滤器 -->
+        <p v-show="seen">v-show 显示成功:
+          <br/>管道展示: {{ message | reverse | uppercase }}</p>
+      </span>
+      
+      <div>
+          <p> {{ dataMsg }} </p>
+          <!-- v-on 指令, 用于处理用户输入, 添加时间监听器, 这里为 click 时间添加了监听器, 点击按钮的时候会调用该指令属性的值
+          也就是在 Vue 实例中的方法 reverseMsg -->
+          <button v-on:click="reverseMsg">逆转 dataMsg</button>
+      </div>
+
+      <ol>
+        <!-- 这里创建一个 todo-item 组件的实例 这里用了 v-for 指令和 v-bind 传入 todo 特征/自定义属性(attribute) -->
+        <todo-item v-for="item in groceryList" v-bind:todo="item"></todo-item>
+      </ol>
+    </div>
+
+    <!-- 表单
+    表单本身是不可见的, 表单只是一个容纳一堆可编辑元素并且可以将这个表单提交到服务器(action 属性指定)的一种元素
+    method 用来指定 action 的类型, 比如 get, post, enctype 指定加密类型
+    比如 url 中以 MAILTO: 开头就是直接发送 email -->
+    <form action="MAILTO:xwt97294597@gmail.com" method="POST" enctype="application/x-www-form-urlencoded" style="background-color: WhiteSmoke ">
+      <!-- fieldset 标签用于将表单内元素分组并且在周围绘制边框 -->
+      <fieldset>
+        <!-- legend 用来定义 fieldset 的标题, 并且一定要是 fieldset 的一个子元素 -->
+        <legend>个人信息</legend>
+        <!-- input 定义输入域, type 指定类型, 包括 radio 单选按钮, text 文本, checkbox 复选按钮, range 范围,
+          submit 用来定义发送按钮, reset 用来重置整个表单
+          name 用于指定 action 发送数据时的 key -->
+        <p>Name: </p>
+        <input type="text" name="name" value="Your Name" size="15" />
+        <br/>
+        <p>Age: </p>
+        <input type="range" name="age" size="15" />
+        <br/>
+        <p>Password: </p>
+        <input type="password" name="age" />
+        <br/>
+        <!-- 多行纯文本 textarea -->
+        <textarea rows="10" cols="30">多行纯文本</textarea>
+        <br/>
+        <!-- select 下拉列表 -->
+        <!-- datalist 也可以配合 option 作为可选的列表(也就是输入文本的列表)
+        IE 9 和更早版本的 IE 浏览器 以及 Safari 不支持 <datalist> 标签-->
+        <select>
+          <!-- option 为下拉列表的元素 -->
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+          <!-- optgroup 用于对 option 分组 -->
+          <optgroup label="Swedish Cars">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+          </optgroup>
+        </select>
+        <br/>
+        <input type="submit" value="提交" />
+        <input type="reset" value="Reset" />
+      </fieldset>
+    </form>
+
+    <!-- 按钮 和 进度条-->
+    <!-- value 为 [0, max], max 默认为 1-->
+    <progress id="myprogress" value="10" max="100"></progress>
+    <p>
+      <!-- button 可以设置 onclick 设置点击时调用的 js 函数 -->
+      <button type="button" value="30" onclick="progress(30)">30%</button>
+      <button type="button" value="60" onclick="progress(60)">60%</button>
+      <button type="button" value="90" onclick="progress(90)">90%</button>
+    </p>
+
+    <!-- iframe 内联框架, 用来在当前 HTML 文档中嵌入另一个文档
+    src 指定链接 -->
+    <iframe src="http://baidu.com" name="iframe_demo" frameborder="0" style="width: 1px; height: 800px; min-width: 100%; *width: 100%;"
+      id="iframe-demo" marginheight="0" marginwidth="0"></iframe>
+
+    <!-- 多媒体 -->
+    <!-- html 插件
+    object 标签可以用来嵌入各种对象, e.g., flash swf, pdf reader, java servelet, html... 
+    主要是用局部属性 data type 这些来指定
+    <embed> 元素(html5)表示一个 HTML Embed 对象, 类似与 object 标签 -->
+    <!-- audio 标签(html5) -->
+    <br/>
+    <br/>
+    <br/>
+    <audio controls>
+      <!-- source 标签可以用来定义多种资源, 如果浏览器不支持某一种就会去尝试其他的 -->
+      <source src="https://www.w3cschool.cn/statics/demosource/horse.mp3" type="audio/mpeg">
+      <source src="https://www.w3cschool.cn/statics/demosource/horse.ogg" type="audio/ogg"> 如果浏览器不支持, 就会出现这一段话...
+    </audio>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <!-- video 视频标签 -->
+    <video width="320" height="240" controls autoplay>
+      <source src="https://www.w3cschool.cn/statics/demosource/movie.ogg" type="video/ogg">
+      <source src="https://www.w3cschool.cn/statics/demosource/movie.mp4" type="video/mp4">
+      <source src="https://www.w3cschool.cn/statics/demosource/movie.webm" type="video/webm">
+      <!-- 如果前面几种都不支持, 就会尝试使用 object 和 embed -->
+      <object data="/statics/demosource/movie.mp4" width="320" height="240">
+        <embed width="320" height="240" src="/statics/demosource/movie.swf">
+      </object>
+    </video>
+  </div>
+</body>
+<!-- JavaScript 代码需要放在尾部（指定的HTML元素之后）, 提高加载速度 -->
+<!-- Js 主要通过处理 HTML DOM 树来进行动态处理页面 -->
+<script src="https://unpkg.com/vue-material@beta"></script>
+<script type="text/javascript">
+  // Modele 层
+  // 兼容 ie11, 不能用 VueMaterial.default
+  Vue.use(VueMaterial);
+  // 在创建 Vue 实例之前全局定义过滤器
+  Vue.filter('reverse', function (value) {
+    return value.split('').reverse().join('')
+  });
+  Vue.filter('uppercase', function (value) {
+    if (!value)
+      return '';
+    return value.toString().toUpperCase();
+  });
+
+  // 在创建 Vue 实例之前声明组件 todo-item, 在 html body 中直接当做标签来用就行.
+  // 用于构建小型, 独立, 可复用的模板组件, 这种有点像自定义元素(Web 组件规范的一部分, 不过还处于草案阶段)
+  Vue.component('todo-item', {
+    // 从父单元(parent scope)传入数据, 相当于 html 中该模板标签(元素)的一个自定义属性, 属性的名字就叫做 todo
+    props: ['todo'],
+    // template 是一个可以用 vue render(我打的比方, 确实像渲染, 或者说字符串模板) 的 html 字符串
+    template: '<li>{{ todo.text }}</li>',
+  });
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello, World.',
+      seen: true,
+      tips: '页面加载于 ' + new Date().toLocaleString(),
+      todos: [
+        { text: 'Learn JavaScript' },
+        { text: 'Learn Vue.js' },
+        { text: 'Build Something Awesome' }
+      ],
+      dataMsg: 'Hello Vue.js',
+      groceryList: [
+        { id: 0, text: 'Vegetables' },
+        { id: 1, text: 'Cheese' },
+        { id: 2, text: 'Whatever else humans are supposed to eat' }
+      ],
+    },
+    methods: {
+      reverseMsg: function() {
+        // 这个方法其实是对 DOM 树进行了更改, 不过因为 vue 的双向绑定, 所以会自动改变 DOM 树的值.
+        this.dataMsg = this.dataMsg.split('').reverse().join('');
+      }
+    },
+  });
+  // js 函数
+  // 类似于 python, 函数也是一个变量, 可以省略 function_name 来创建一个匿名函数
+  // js函数 还有一个特点就是 *提升(hoisting)*: 默认将在一个作用域下, 可以在声明前就调用, (使用表达式定义函数时无法提升, 因为
+  // 变量没有提升特性)
+  function progress(value) {
+    document.getElementById("myprogress").value = value;
+  }
+  var annoFoo = function (a, b) {
+    // 虽然在 js 用 typeof 操作符判断函数类型为 "function", 不过 js 的函数更加像对象,
+    // js 函数有属性和方法, 比如 arguments.length 属性返回函数调用过程接收到的参数个数
+    // arguments 是 js函数的一个内置对象
+    return arguments.length;
+  };
+  // 一般 js 调试可以用 alert 和 console.log 来输出
+  // js 函数调用时如果参数个数不够默认值为 undefined, 布尔判断为 false
+  // js 函数调用为值传递
+  console.log(annoFoo(1));
+  console.log(annoFoo(2, 2, 1));
+  // 上述调用都是在不属于任何对象中的调用, 在全局作用域下的 this 就是 window 对象.
+  // 不过使用 window 对象作为一个变量容易造成程序崩溃
+  window.annoFoo();
+  // 函数作为对象方法调用, 这里的 myObject 就是一个对象
+  var myObject = {
+    firstName: "John",
+    lastName: "Doe",
+    fullName: function () {
+      return this.firstName + " " + this.lastName;
+    }
+  }
+  console.log(myObject.fullName());
+  // 前面说过, js 函数其实就是类, 所以函数可以作为构造器, 用 new 对象就可以得到该函数的对象的引用
+  // 不然默认调用函数的话, 函数里面的 this 关键字表示函数所在外面的对象的引用
+  var x = new (function (arg1, arg2) {
+    this.firstName = arg1;
+    this.lastName = arg2;
+  })("Fuck", "me");
+  console.log(x.firstName);
+  // js 函数就是对象, 所以js 函数都有 call 和 apply 方法, 这两个方法的第一个参数都是包含函数所需要的上下文的一个对象
+  // 毕竟这要构成一个闭包, 这样做的目的是改变函数运行时的上下文
+  // call 和 apply 的区别在与 call 第一个参数后面的参数是一个可变长参数来容纳, 而 apply 的第二个参数就是一个数组,
+  // 直接把数组作为传入参数的列表
+  // 在 js 非严格模式(non-strict mode)下, 如果第一个参数的值是 null 或 undefined, 它将使用全局对象(window)替代
+  my_name = {
+    firstName: "Bill",
+    lastName: "Kevin",
+  };
+  console.log(myObject.fullName.call(my_name, 10, 2));
+
+</script>
+<!-- <noscript> 标签(元素)提供无法使用脚本时的替代内容 -->
+<noscript>Sorry, your browser does not support JavaScript!</noscript>
+
+</html>
