@@ -1,0 +1,107 @@
+// 我安装的插件: Cpp tools...
+{
+  "files.associations": {
+    "iostream": "cpp",
+    "iosfwd": "cpp",
+    "*.tcc": "cpp",
+    "cctype": "cpp",
+    "clocale": "cpp",
+    "cstdint": "cpp",
+    "cstdio": "cpp",
+    "cstdlib": "cpp",
+    "cwchar": "cpp",
+    "cwctype": "cpp",
+    "exception": "cpp",
+    "initializer_list": "cpp",
+    "istream": "cpp",
+    "limits": "cpp",
+    "new": "cpp",
+    "ostream": "cpp",
+    "stdexcept": "cpp",
+    "streambuf": "cpp",
+    "system_error": "cpp",
+    "type_traits": "cpp",
+    "typeinfo": "cpp",
+    "sstream": "cpp",
+    "bitset": "cpp",
+    "cmath": "cpp",
+    "string_view": "cpp",
+    "utility": "cpp",
+    "ios": "cpp",
+    "algorithm": "cpp",
+    "iterator": "cpp",
+    "string": "cpp",
+    "array": "cpp",
+    "optional": "cpp",
+    "tuple": "cpp",
+    "atomic": "cpp",
+    "cfenv": "cpp",
+    "chrono": "cpp",
+    "cinttypes": "cpp",
+    "codecvt": "cpp",
+    "complex": "cpp",
+    "condition_variable": "cpp",
+    "csetjmp": "cpp",
+    "csignal": "cpp",
+    "cstdarg": "cpp",
+    "cstddef": "cpp",
+    "cstring": "cpp",
+    "ctime": "cpp",
+    "cuchar": "cpp",
+    "fstream": "cpp",
+    "functional": "cpp",
+    "future": "cpp",
+    "iomanip": "cpp",
+    "memory": "cpp",
+    "mutex": "cpp",
+    "numeric": "cpp",
+    "ratio": "cpp",
+    "scoped_allocator": "cpp",
+    "shared_mutex": "cpp",
+    "thread": "cpp",
+    "typeindex": "cpp",
+    "valarray": "cpp"
+  },
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
+  "C_Cpp.errorSquiggles": "Disabled",
+  "better-comments.multilineComments": true,
+  "better-comments.tags": [
+    {
+      "tag": "!",
+      "color": "#FF2D00",
+      "strikethrough": false
+    },
+    {
+      "tag": "?",
+      "color": "#3498DB",
+      "strikethrough": false
+    },
+    {
+      "tag": "//",
+      "color": "#474747",
+      "strikethrough": true
+    },
+    {
+      "tag": "todo",
+      "color": "#FF8C00",
+      "strikethrough": false
+    },
+    {
+      "tag": "*",
+      "color": "#98C379",
+      "strikethrough": false
+    }
+  ],
+  "files.autoGuessEncoding": true,
+  "vim.insertModeKeyBindings": [
+    {
+      "before": [
+        ",",
+        "."
+      ],
+      "after": [
+        "<Esc>"
+      ]
+    }
+  ]
+}
