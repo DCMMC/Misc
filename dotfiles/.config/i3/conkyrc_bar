@@ -31,12 +31,14 @@ conky.config = {
 }
 
 -- 不知道是因为更新了一下 conky还是awesome font, 图标出了点问题, 而且不能用空格了
+-- ${mem} \
+-- ${battery_percent}% \
 conky.text = [[
 ${upspeed wlp4s0}/s ${downspeed wlp4s0}/s \
-${cpu cpu0}% \
-${mem} \
+🚀${cpu cpu0}% \
+💻${mem} \
 ${fs_used /} \
-${battery_percent}% \
+🔥${battery_percent}% \
 ${execi 1 amixer | grep -A10 'Master' | sed -rn 's/.*\[([0-9]+%)\].*\[(on|off)\]/\2\1/p' | sed -n '1p' | sed 's/off.*//' | sed -r 's/on( [01234]?[0-9]%)/\1/' | sed -r 's/(on|) 0%/0%/' | sed -r 's/on//'} \
 ${time %H:%M}
 ]]

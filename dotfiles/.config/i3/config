@@ -18,6 +18,10 @@ exec_always --no-startup-id albert&
 
 # for root Authentication
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
+
+# touchpad: set tap as click
+# https://www.reddit.com/r/i3wm/comments/516e8c/tap_to_click_touchpad/
+exec xinput set-prop 14 287 1
 #===appearance===
 
 #---wallpaper---
@@ -29,7 +33,7 @@ exec --no-startup-id feh --bg-scale /home/kevin/Pictures/wallpapers/wallpaper.jp
 # exec ~/.config/i3/wallpaper.sh &
 
 # font
-font pango:System San Francisco 14, Font Awesome 5 Free 14
+font pango:System San Francisco 18, Font Awesome 5 Free 18 
 
 #---bar---
 
@@ -104,16 +108,11 @@ for_window [window_role="gimp-toolbox"] floating enable; layout stacking; move r
 
 #===programs shortcuts===
 
-# dmenu (a program launcher)
-# 已被抛弃, 改用albert
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-# bindsym $mod+d exec --no-startup-id rofi -show run -lines 3 -eh 2 -width 100 -padding 800 -opacity "85" -bw 0 -bc "$bg-color" -bg "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18"
-
 # terminal
 bindsym $mod+Return exec konsole
 
 # browsers
-bindsym $mod+Shift+c exec google-chrome-unstable
+bindsym $mod+Shift+c exec chromium
 
 # printscreen(use "scrot".Print=PrtSc/PrintScreen)
 bindsym $mod+Print exec scrot
@@ -130,8 +129,8 @@ bindsym $mod+e exec --no-startup-id nautilus
 #workspace "9:Mail" output eDP-1
 
 # putting clients on specific workspaces
-assign [class="Chromium"] 0
-assign [class="Webstorm"] 0 
+# assign [class="Chromium"] 0
+# assign [class="Webstorm"] 0 
 
 
 #---switch workspace---

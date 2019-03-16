@@ -1,20 +1,14 @@
+
 " Powerline Theme
 set laststatus=2
 set t_Co=256
-python3 from powerline.vim import setup as powerline_setup
-python3 powerline_setup()
-python3 del powerline_setup
-
+" Powerline 已经过时
+" python3 from powerline.vim import setup as powerline_setup
+" python3 powerline_setup()
+" python3 del powerline_setup
+"
 " 参考: https://www.jianshu.com/p/bc19b91354ef
 " vim 版本必须 >= 8.0, 并且 +python
-
-" 配色
-set background=dark
-" 不设置这些会导致背景色为纯黑, 贼丑, 设置之后将会是终端(模拟器)的背景色,
-" 所以还需要把终端主题改成 solarized
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-colorscheme solarized
 
 " Vundle 插件管理
 set nocompatible              " required
@@ -34,7 +28,7 @@ Plugin 'gmarik/Vundle.vim'
 " 要记得在vim中 :PluginInstall 安装这些插件
 
 " 配色
-Bundle 'Solarized'
+" Bundle 'Solarized'
 " 格式化注释
 " gcb 为 box circled comment
 " gcc 为普通注释
@@ -45,12 +39,16 @@ Plugin 'DCMMC/caw.vim'
 " Plugin 'scrooloose/nerdcommenter'
 " 缩进指示线
 Plugin 'Yggdroot/indentLine'
+" Sublime Text 3 color scheme
+Bundle 'ErichDonGubler/vim-sublime-monokai'
 " 自动补全括号
 Plugin 'jiangmiao/auto-pairs'
 " 折叠代码
 Plugin 'tmhedberg/SimpylFold'
 " Python 自动缩进
 Plugin 'Vimjas/vim-python-pep8-indent'
+" An alternative to powerline
+Plugin 'vim-airline/vim-airline'
 " mypy vim 扩展
 Plugin 'Integralist/vim-mypy'
 " Plugin 'vim-scripts/indentpython.vim'
@@ -72,12 +70,14 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tpope/vim-fugitive'
 " 异步 shell 执行
 Plugin 'skywind3000/asyncrun.vim'
+" auto format
+Plugin 'Chiel92/vim-autoformat'
 "=== vim-trailing-whitespace将代码行最后无效的空格标红 ===
 Plugin 'bronson/vim-trailing-whitespace'
 " 实时 md 渲染预览
 Plugin 'iamcco/mathjax-support-for-mkdp'
 Plugin 'iamcco/markdown-preview.vim'
-let g:mkdp_path_to_chrome="google-chrome-unstable"
+let g:mkdp_path_to_chrome="chromium"
 let g:mkdp_auto_close=0
 nmap <F7> <Plug>MarkdownPreview
 nmap <F8> <Plug>StopMarkdownPreview
@@ -90,29 +90,41 @@ Plugin 'fholgado/minibufexpl.vim'
 " 如果对当前窗口大小不满意, ':vertical resize+num' 宽度+[num]行,
 " ':resize+num', 高度
 
-""""""""""""""""""""""""""""""  
-" miniBufexplorer Config  
-""""""""""""""""""""""""""""""  
-" let g:miniBufExplMapWindowNavArrows = 1  
-" let g:miniBufExplMapWindowNavVim = 1  
-" let g:miniBufExplMapCTabSwitchWindows = 1  
-" let g:miniBufExplMapCTabSwitchBufs = 1   
-" let g:miniBufExplModSelTarget = 1  
-  
-" 解决FileExplorer窗口变小问题  
-" let g:miniBufExplForceSyntaxEnable = 1  
-" let g:miniBufExplorerMoreThanOne=2  
+""""""""""""""""""""""""""""""
+" miniBufexplorer Config
+""""""""""""""""""""""""""""""
+" let g:miniBufExplMapWindowNavArrows = 1
+" let g:miniBufExplMapWindowNavVim = 1
+" let g:miniBufExplMapCTabSwitchWindows = 1
+" let g:miniBufExplMapCTabSwitchBufs = 1
+" let g:miniBufExplModSelTarget = 1
+
+" 解决FileExplorer窗口变小问题
+" let g:miniBufExplForceSyntaxEnable = 1
+" let g:miniBufExplorerMoreThanOne=2
 
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+" 配色
+set background=dark
+" 不设置这些会导致背景色为纯黑, 贼丑, 设置之后将会是终端(模拟器)的背景色,
+" 所以还需要把终端主题改成 solarized
+" let g:solarized_termcolors=256
+" let g:solarized_termtrans=1
+syntax on
+" colorscheme solarized
+colorscheme sublimemonokai
+
 " 我修改过上面这个插件, 因为我只想 python 文件
 " 标示行末不必要的空格, 所以改了下 g:extra_whitespace_ignored_filetypes
 " 变成 g:extra_whitespace_filetypes
 let g:extra_whitespace_filetypes = ['python']
 
+" F3 autoformat
+noremap <F3> :Autoformat<CR>
 
 " 分割方向
 " :sv <filename> 纵向分割打开
@@ -141,11 +153,42 @@ let g:SimpylFold_docstring_preview=1
 " \ set softtabstop=4 |
 " \ set shiftwidth=4
 
+highlight BadWhitespace ctermbg=red guibg=red
+
 " web开发缩进
-au BufNewFile,BufRead *.js, *.html, *.css
-\ set tabstop=2 |
-\ set softtabstop=2 |
-\ set shiftwidth=2
+au BufNewFile,BufRead *.js,*.html,*.css set tabstop=2
+au BufNewFile,BufRead *.js,*.html,*.css set softtabstop=2
+au BufNewFile,BufRead *.js,*.html,*.css set shiftwidth=2
+
+" Lua
+au BufNewFile,BufRead *.lua set tabstop=2
+au BufNewFile,BufRead *.lua set softtabstop=2
+au BufNewFile,BufRead *.lua set shiftwidth=2
+
+" yml 
+au BufNewFile,BufRead *.yml,*.yaml set tabstop=2
+au BufNewFile,BufRead *.yml,*.yaml set softtabstop=2
+au BufNewFile,BufRead *.yml,*.yaml set shiftwidth=2
+
+" C/C++
+au BufRead,BufNewFile *.c,*.h,*.cpp,*hpp set expandtab
+au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp set tabstop=4
+au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp set shiftwidth=4
+au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp set autoindent
+au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp match BadWhitespace /^\t\+/
+au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp match BadWhitespace /\s\+$/
+au         BufNewFile *.c,*.h,*.cpp,*.hpp set fileformat=unix
+au BufRead,BufNewFile *.c,*.h,,*.cpp,*.hpp let b:comment_leader = '/* '
+
+" Java
+au BufRead,BufNewFile *.java set expandtab
+au BufRead,BufNewFile *.java set tabstop=4
+au BufRead,BufNewFile *.java set shiftwidth=4
+au BufRead,BufNewFile *.java set autoindent
+au BufRead,BufNewFile *.java match BadWhitespace /^\t\+/
+au BufRead,BufNewFile *.java match BadWhitespace /\s\+$/
+au         BufNewFile *.java set fileformat=unix
+au BufRead,BufNewFile *.java let b:comment_leader = '//'
 
 " 标示不必要的空白字符
 " au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
@@ -153,19 +196,57 @@ au BufNewFile,BufRead *.js, *.html, *.css
 " 支持 utf-8
 set encoding=utf-8
 
+" YCM
 " 自动补全微调
-let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_complete_in_strings = 1
+set completeopt=menu,longest	"让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
+let g:ycm_add_preview_to_completeopt = 0
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif	"离开插入模式后自动关闭预览窗口
+" 回车即选中当前项
+inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"
+" 设置在下面几种格式的文件上屏蔽ycm
+let g:ycm_filetype_blacklist = {
+			\ 'tagbar' : 1,
+			\ 'nerdtree' : 1,
+			\}
+" 输入第2个字符开始补全
+let g:ycm_min_num_of_chars_for_completion=2
+" 开启语义补全
+let g:ycm_seed_identifiers_with_syntax=1
+" 在字符串输入中也能补全
+let g:ycm_complete_in_strings = 1
+" YCM 异步主动语义补全, 两个字符触发
+" https://zhuanlan.zhihu.com/p/33046090
+let g:ycm_semantic_triggers =  {
+			\ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+			\ 'cs,lua,javascript': ['re!\w{2}'],
+			\ }
+" let g:ycm_filetype_whitelist = {
+"			\ "c":1,
+"			\ "cpp":1,
+"			\ "objc":1,
+"			\ "sh":1,
+"			\ "py": 1,
+"			\ "js": 1,
+"			\ "html": 1,
+"			\ "vue": 1,
+"			\ "ts": 1,
+"			\ "zsh":1,
+"			\ "zimbu":1,
+"			\ }
+" youcompleteme  默认tab  s-tab 和 ultisnips 冲突
+" let g:ycm_key_list_select_completion = ['<Down>']
+" let g:ycm_key_list_previous_completion = ['<Up>']
 
 " 支持Virtualenv虚拟环境
 py << EOF
 import os
 import sys
 if 'VIRTUAL_ENV' in os.environ:
-  project_base_dir = os.environ['VIRTUAL_ENV']
-  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-  execfile(activate_this, dict(__file__=activate_this))
+	project_base_dir = os.environ['VIRTUAL_ENV']
+	activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+	execfile(activate_this, dict(__file__=activate_this))
 EOF
 
 " ale 异步语法检查
@@ -179,7 +260,6 @@ let g:PyFlakeOnWrite = 1
 " 错误表示在整行而不是侧边
 let g:flake8_show_in_file = 1
 let python_highlight_all=1
-syntax on
 
 " 在终端 vim 中默认打开tabs
 let g:nerdtree_tabs_open_on_console_startup=1
@@ -196,18 +276,18 @@ autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf(" --style pep8")<CR>
 " 一键执行
 map <F5> :call CompileRun()<CR>
 func! CompileRun()
-    exec "w"
-    if &filetype == 'c'
-        exec "! gcc  % -o %<; time ./%<"
-    elseif &filetype == 'cpp'
-        exec "! g++ -std=c++11 % -o %<; time ./%<"
-    elseif &filetype == 'java'
-        exec "! javac %; time java %<"
-    elseif &filetype == 'sh'
-        exec "! time bash %"
-    elseif &filetype == 'python'
-        exec "! time python %"
-    endif
+	exec "w"
+	if &filetype == 'c'
+		exec "! gcc  % -o %<; time ./%<"
+	elseif &filetype == 'cpp'
+		exec "! g++ -std=c++11 % -o %<; time ./%<"
+	elseif &filetype == 'java'
+		exec "! javac %; time java %<"
+	elseif &filetype == 'sh'
+		exec "! time bash %"
+	elseif &filetype == 'python'
+		exec "! time python %"
+	endif
 endfunc
 
 " 用 ,. 组合键代替 Esc
