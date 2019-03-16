@@ -1,3 +1,0 @@
-/**
- * A: Integer Inquiry
- */
