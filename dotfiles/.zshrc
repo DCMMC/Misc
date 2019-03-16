@@ -48,6 +48,7 @@ ENABLE_CORRECTION="true"
 # stamp shown in the history command output.
 # The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="yyyy-mm-dd"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -57,7 +58,7 @@ ENABLE_CORRECTION="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 #plugins=(git)
-plugins=(git autojump)
+plugins=(vi-mode history-substring-search git autojump zsh-syntax-highlighting zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -90,31 +91,41 @@ alias cnpm="npm --registry=https://registry.npm.taobao.org \
 --cache=$HOME/.npm/.cache/cnpm \
 --disturl=https://npm.taobao.org/dist \
 --userconfig=$HOME/.cnpmrc"
-alias aria2="aria2c --conf-path=/home/kevin/.aria2.conf"
+alias aria2="cd /home/kevin && aria2c --conf-path=/home/kevin/.aria2.conf"
+alias open="xdg-open"
+alias sublime="subl"
 alias psg="ps -aux|grep"
 alias kills="sudo kill -s 9"
-alias update="yaourt -Syyu"
+alias update="yay -Syu"
 alias cl="clear"
+alias yay="yay --aururl https://aur.tuna.tsinghua.edu.cn/"
 alias gc="git clone"
+# vnc server the current xorg desktop environment
+alias vncX="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
 # use privoxy to forward socks5 to http
-alias sshttp="export https_proxy='127.0.0.1:8118' && export http_proxy='127.0.0.1:8118' && git config --global http.proxy socks5://127.0.0.1:1080 && git config --global https.proxy socks5://127.0.0.1:1080"
-alias unsshttp="unset http_proxy && unset https_proxy && git config --global --unset http.proxy && git config --global --unset https.proxy"
+alias sshttp="export https_proxy='http://127.0.0.1:8118' && export http_proxy='http://127.0.0.1:8118' && export HTTPS_PROXY='http://127.0.0.1:8118' && export HTTP_PROXY='http://127.0.0.1:8118' && git config --global http.proxy socks5://127.0.0.1:1080 && git config --global https.proxy socks5://127.0.0.1:1080"
+alias unsshttp="unset all_proxy && unset ALL_PROXY && unset http_proxy && unset https_proxy && unset HTTP_PROXY && unset HTTPS_PROXY && git config --global --unset http.proxy && git config --global --unset https.proxy"
 alias nvidia-setting='optirun -b none nvidia-settings -c :8'
-alias activeTensorflow='source ~/tensorflow/bin/activate'
-alias deactiveTensorflow='deactivate'
 alias cudaPython='optirun python'
 # alias nvidiaChromeUnstable="sudo optirun -b primus google-chrome-unstable --no-sandbox"
-alias nvidiaChromeUnstable="optirun -b primus google-chrome-unstable --disable-gpu-sandbox"
+alias nvidiaChrome="optirun -b primus google-chrome-stable --disable-gpu-sandbox"
 alias enw='emacs -nw'
 # fix filezilla carsh when using wayland
 alias filezilla='GDK_BACKEND=x11 filezilla' 
 # yaourt
 export VISUAL="vim"
+# acm run
+alias acmRun='_acmRun(){ g++ -std=c++11 -o $1.o -Wall $1.cpp; ./$1.o > o.txt; subl o.txt&;}; _acmRun'
+alias acmDbg='_acmDbg(){g++ -std=c++11 -o $1.o -Wall $1.cpp; gdb $1.o;}; _acmDbg'
+# fast Merge localte(mlocate) !
+alias mFind='sudo updatedb && locate'
 
 # CUDA
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda-8.0/opt/cuda/lib64"
 export CUDA_HOME=/usr/local/cuda-8.0/opt/cuda
-export PATH="$PATH:/usr/local/cuda-8.0/opt/cuda/bin:/home/kevin/Android/Sdk/platform-tools"
+export PATH="$PATH:/home/kevin/go/bin:/usr/local/cuda-8.0/opt/cuda/bin:/home/kevin/Android/Sdk/platform-tools:$HOME/.cargo/bin:/home/kevin/.local/bin:/usr/local/texlive/2018/bin/x86_64-linux:/home/kevin/.gem/ruby/2.6.0/bin"
+# fix qt application crash in gnome on wayland
+export QT_QPA_PLATFORM="xcb"
 
 # 给 man 添加漂亮的语法高亮
 export LESS_TERMCAP_mb=$'\E[1m\E[32m'
@@ -173,3 +184,39 @@ export MOZ_PLUGIN_PATH="/usr/lib/mozilla/plugins"
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/kevin/.sdkman"
 [[ -s "/home/kevin/.sdkman/bin/sdkman-init.sh" ]] && source "/home/kevin/.sdkman/bin/sdkman-init.sh"
+
+# set zsh to vi mode
+set -o vi
+
+# use hfs+ disk partition as data exchange partition among ArchLinux, macOS and Windows.
+function hfs_disk () { 
+	if mount | grep /mnt/hfs_disk > /dev/null; then
+		sudo umount /dev/hfs_disk
+	fi
+	sudo mkdir -p /mnt/hfs_disk && sudo sudo mount -t hfsplus -o force --uuid 8b199521-1001-3e27-a635-dc65658c059c /mnt/hfs_disk && sudo mount -t hfsplus -o remount,force,rw --uuid 8b199521-1001-3e27-a635-dc65658c059c /mnt/hfs_disk 
+}
+
+# wrap these commands for interactive use to avoid accidental overwrites.
+function rm() { command rm -i "$@"; }
+function cp() { command cp -i "$@"; }
+function mv() { command mv -i "$@"; }
+
+# set qt5 theme as `qgnomeplatform` if running GNOME
+if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
+	export QT_QPA_PLATFORMTHEME='gnome'
+fi
+# fix krunner not autostart in kde
+if [[ "$XDG_CURRENT_DESKTOP" == "KDE" && `pgrep krunner` == '' ]]; then
+	nohup krunner &
+fi
+
+# fix deepin-wine BadWindow error in KDE and other non-gnome DE
+if [[ "$XDG_CURRENT_DESKTOP" == "KDE" && `pgrep gsd-xsettings` == '' ]]; then
+	nohup /usr/lib/gsd-xsettings &
+fi
+# replace chromium icons to chrome style for Paper-icon-theme-git and chromium
+function replace_chromium_icons () {
+	for i in `yay -Ql paper-icon-theme-git | grep 'chromium.*\.png$'`; if [ $i != 'paper-icon-theme-git' ]; then sudo cp -rvf ${i%%chromium*.png}'google-chrome.png' ${i}; fi
+}
+# for lua packages installed locally by luarocks
+eval "$(luarocks path)"
