@@ -18,6 +18,10 @@ exec_always --no-startup-id albert&
 
 # for root Authentication
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
+
+# touchpad: set tap as click
+# https://www.reddit.com/r/i3wm/comments/516e8c/tap_to_click_touchpad/
+exec xinput set-prop 14 287 1
 #===appearance===
 
 #---wallpaper---
@@ -29,7 +33,7 @@ exec --no-startup-id feh --bg-scale /home/kevin/Pictures/wallpapers/wallpaper.jp
 # exec ~/.config/i3/wallpaper.sh &
 
 # font
-font pango:System San Francisco 14, Font Awesome 5 Free 14
+font pango:System San Francisco 18, Font Awesome 5 Free 18 
 
 #---bar---
 
