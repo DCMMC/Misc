@@ -5,7 +5,7 @@ Miscellaneous
 
 ### gnome
 
-*****Restore:**
+**restore:**
 
 ```
 dconf load /org/gnome/ < gnomeSettingBackup.txt
