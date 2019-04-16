@@ -1,14 +1,32 @@
 #!/bin/env python3
+# Refs:
+# [1]. http://math.umd.edu/~petersd/460/interp460.pdf
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-# Lagrange 插值法, 算法效率:
-# 对于 x_0, \cdots, x_n 这 (n+1) 个点
-# (2n+1)(n+1)A + n(n+1)M + n(n+1)D
-f = lambda X, Y: lambda x: np.sum([y_k * np.prod([ # noqa
-            (x - x_i) / (X[k] - x_i) if i != k else 1 for
-            i, x_i in enumerate(X)]) for k, y_k in enumerate(Y)])
+def newton_interpolation(X, Y):
+    """
+    本质上就是 Lagrange 插值法, 不过在时间复杂度上更加优秀
+    """
+    # X = [x_0, /cdots, x_{n-1}]
+    # Calculate the divided difference by constructing divided difference table
+    A = Y
+    n = len(X)
+    # python 的 range(a, b) 是 [a, b)
+    # 计算复杂度: 对于 n 个点(x_0, /cdots, x_{n-1}) 有 (n(n+1)/2)D + n(n+1)A
+    for k in range(1, n):
+        for j in range(n-1, k-1, -1):
+            A[j] = (A[j] - A[j-1]) / (X[j] - X[j-k])
+
+    def newton(x_input):
+        # use Horner's Rule to calculate P_n(x)
+        p = A[-1]
+        for i in range(-2, -n-1, -1):
+            p = p * (x_input - X[i]) + A[i]
+        return p
+
+    return newton
 
 
 fig, ax = plt.subplots()
@@ -36,17 +54,17 @@ def onclick(event):
 def onpress(e):
     if e.key == 'enter':
         global X, Y
-        fun = f(X, Y)
+        fun = newton_interpolation(X, Y)
         xs = np.arange(0., 10., 0.005)
         ys = [fun(x) for x in xs]
-        plt.plot(xs, ys, c='r', label="Lagrange", linewidth=3)
+        plt.plot(xs, ys, c='r', label="Newton", linewidth=3)
         plt.legend(loc='upper right')
         fig.canvas.draw()
 
 
 ax.set_xlim([0, 10])
 ax.set_ylim([0, 10])
-fig.suptitle('Lagrange interpolation, click some points and enter to start.',
+fig.suptitle('Newton interpolation, click some points and enter to start.',
              fontsize=20)
 fig.canvas.mpl_connect('button_press_event', onclick)
 fig.canvas.mpl_connect('key_press_event', onpress)
