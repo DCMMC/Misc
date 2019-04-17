@@ -54,7 +54,7 @@ def onpress(e):
         fig.canvas.draw()
         n = 1
         while math.fabs(T_1 - T_0) >= epsilon:
-            time.sleep(0.3)
+            time.sleep(3)
             h /= 2
             n *= 2
             T_0 = T_1

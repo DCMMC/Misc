@@ -39,7 +39,7 @@ plt.axvline(0, color='gray', linewidth=1.5)
 plt.legend(loc='upper right')
 
 
-def adaptive_numerical_integration(a, b, e=0.0001):
+def adaptive_numerical_integration(a, b, e=0.001):
     # 需要继续迭代以求更高精度的区间放入此 Stack
     global target
     h = b - a
@@ -66,13 +66,13 @@ def adaptive_numerical_integration(a, b, e=0.0001):
     draw()
     integration = 0.
     while len(stack) > 0:
-        time.sleep(0.01)
+        # time.sleep(0.01)
         interval = stack[-1]
         del stack[-1]
         # 这个公式就是从 Lab7 那个公式一般化为 n=1 的情况(i.e. 一个梯形细分为两个)
         T_1 = 0.5 * interval[-1] + 0.5 * (interval[1] - interval[0]) \
             * target((interval[0] + interval[1]) / 2)
-        if math.fabs(T_1 - interval[-1]) >= E:
+        if math.fabs(T_1 - interval[-1]) >= E * (interval[1] - interval[0]):
             mid = (interval[0] + interval[1]) / 2
             stack.append([
                 interval[0], mid,
