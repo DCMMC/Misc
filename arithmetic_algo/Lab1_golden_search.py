@@ -50,7 +50,7 @@ gs.update(left=0.1, right=0.9, bottom=0.15, top=0.25, hspace=0.2)
 
 def submit(val):
     global started
-    initial_text = [tb_func.text, tb_acc.text, tb_start.text, tb_end.text]
+    initial_text = [tb_func.text, tb_acc.text, tb_start.text, tb_end.text, tb_sleep.text]
     if not started:
         fig.suptitle('Click Run button to start golden search maxima.',
                      fontsize=20)
@@ -59,7 +59,7 @@ def submit(val):
         # print(initial_text)
         golden_search(a=eval(initial_text[2]), b=eval(initial_text[3]),
                       f=eval('lambda x: ' + initial_text[0]),
-                      sleep=eval(initial_text[3]),
+                      sleep=eval(initial_text[4]),
                       e=eval(initial_text[1]))
         started = False
     else:
@@ -94,9 +94,9 @@ def annotate(x, y, text):
 
 
 def draw_working_range(left, right, golden_l, golden_r):
-    ax.fill_between(np.arange(left, right, 0.001),
-                    [1.1 for _ in np.arange(left, right, 0.001)],
-                    [-0.1 for _ in np.arange(left, right, 0.001)],
+    ax.fill_between(np.arange(left, right+0.001, 0.001),
+                    [1.1 for _ in np.arange(left, right+0.001, 0.001)],
+                    [-0.1 for _ in np.arange(left, right+0.001, 0.001)],
                     color="crimson", alpha=0.4)
     ax.axvline(left, color='r', linewidth=3, alpha=0.5, linestyle='--')
     ax.axvline(right, color='r', linewidth=3, alpha=0.5, linestyle='--')
@@ -124,6 +124,8 @@ def golden_search(a: float = math.pi*(-0.5),
     x_2 = a + (b - a) * 0.618
     f_1 = f(x_1)
     f_2 = f(x_2)
+    draw_working_range(a, b, x_1, x_2)
+    fig.canvas.draw()
     # print('result is between {:.6f}π and {:.6f}π.'.format(
     #     a / math.pi, b / math.pi))
     while b - a > e:
