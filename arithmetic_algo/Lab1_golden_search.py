@@ -1,6 +1,7 @@
 #!/bin/env python3
 # 黄金分割搜索
 import math
+import traceback
 import matplotlib.pyplot as plt
 import numpy as np
 import time
@@ -26,12 +27,13 @@ def zero_unit(n):
 
 
 def plot_func(left, right, f):
+    global initial_text
     if left >= right:
         print('参数必须 left < right!')
         return
     X = np.arange(left, right, zero_unit(right - left) / 100)
     Y = [f(i) for i in X]
-    ax.plot(X, Y, c='r', label="$\\cos(x)$", linewidth=3)
+    ax.plot(X, Y, c='r', label=initial_text[0], linewidth=3)
     ax.axhline(0, color='gray', linewidth=1.5)
     ax.axvline(0, color='gray', linewidth=1.5)
     ax.legend(loc='upper right')
@@ -50,17 +52,22 @@ gs.update(left=0.1, right=0.9, bottom=0.15, top=0.25, hspace=0.2)
 
 def submit(val):
     global started
-    initial_text = [tb_func.text, tb_acc.text, tb_start.text, tb_end.text, tb_sleep.text]
+    initial_text = [tb_func.text, tb_acc.text, tb_start.text,
+                    tb_end.text, tb_sleep.text]
     if not started:
         fig.suptitle('Click Run button to start golden search maxima.',
                      fontsize=20)
 
         started = True
         # print(initial_text)
-        golden_search(a=eval(initial_text[2]), b=eval(initial_text[3]),
-                      f=eval('lambda x: ' + initial_text[0]),
-                      sleep=eval(initial_text[4]),
-                      e=eval(initial_text[1]))
+        try:
+            golden_search(a=eval(initial_text[2]), b=eval(initial_text[3]),
+                          f=eval('lambda x: ' + initial_text[0]),
+                          sleep=eval(initial_text[4]),
+                          e=eval(initial_text[1]))
+        except Exception:
+            ax.clear()
+            traceback.print_exc()
         started = False
     else:
         pass
@@ -94,9 +101,11 @@ def annotate(x, y, text):
 
 
 def draw_working_range(left, right, golden_l, golden_r):
-    ax.fill_between(np.arange(left, right+0.001, 0.001),
-                    [1.1 for _ in np.arange(left, right+0.001, 0.001)],
-                    [-0.1 for _ in np.arange(left, right+0.001, 0.001)],
+    rg = np.arange(left, right, 0.001)
+    rg = np.append(rg, [right, ])
+    ax.fill_between(rg,
+                    [1.1 for _ in rg],
+                    [-0.1 for _ in rg],
                     color="crimson", alpha=0.4)
     ax.axvline(left, color='r', linewidth=3, alpha=0.5, linestyle='--')
     ax.axvline(right, color='r', linewidth=3, alpha=0.5, linestyle='--')
@@ -118,6 +127,7 @@ def golden_search(a: float = math.pi*(-0.5),
     if a >= b or e >= (b - a):
         print('a, b, e are invalid.')
         return
+    ax.clear()
     plot_func(a, b, f=f)
     fig.canvas.draw()
     x_1 = a + (b - a) * 0.382

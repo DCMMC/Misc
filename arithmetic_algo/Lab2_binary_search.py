@@ -1,6 +1,7 @@
 #!/bin/env python3
 from math import * # noqa
 import math
+import traceback
 # import matplotlib
 import matplotlib.pyplot as plt # noqa
 import numpy as np # noqa
@@ -54,20 +55,25 @@ def submit(val):
     if not started:
         started = True
         # print(initial_text)
-        a, b = eval(initial_text[2]), eval(initial_text[3])
-        e = eval(initial_text[1])
-        if a >= b:
-            print('参数 start 和 end 必须满足 start < end!')
-            return
-        if (b - a) < e:
-            print('已经满足精度条件 e!')
-        f = eval('lambda x: ' + initial_text[0])
-        plot_func(a, b, f)
-        fig.canvas.draw()
-        binary_search(a=a, b=b,
-                      f=f,
-                      sleep_time=eval(initial_text[4]),
-                      e=e)
+        try:
+            a, b = eval(initial_text[2]), eval(initial_text[3])
+            e = eval(initial_text[1])
+            if a >= b:
+                print('参数 start 和 end 必须满足 start < end!')
+                return
+            if (b - a) < e:
+                print('已经满足精度条件 e!')
+                return
+            f = eval('lambda x: ' + initial_text[0])
+            plot_func(a, b, f)
+            fig.canvas.draw()
+            binary_search(a=a, b=b,
+                          f=f,
+                          sleep_time=eval(initial_text[4]),
+                          e=e)
+        except Exception: # noqa
+            traceback.print_exc()
+            ax.clear()
         started = False
     else:
         pass
@@ -75,7 +81,7 @@ def submit(val):
 
 axes = [fig.add_subplot(gs[i, j]) for i, j in [[0, 0], [0, 1], [1, 0], [1, 1],
                                                [0, 2]]]
-initial_text = ['x - 2*sin(x)', '0.01', '-4', '4', '0']
+initial_text = ['x - 2*sin(x)', '0.05', '-4', '4', '0']
 tb_func = TextBox(axes[0], 'Function', initial=initial_text[0])
 tb_acc = TextBox(axes[1], 'Accuracy', initial=initial_text[1])
 tb_start = TextBox(axes[2], 'Start', initial=initial_text[2])
@@ -138,7 +144,7 @@ def binary_search(f, a: float = -4.,
         time.sleep(sleep_time)
         # avoid repeat roots
         for i in roots:
-            if math.fabs(mid - i) <= 2 * e:
+            if math.fabs(mid - i) <= 4 * e:
                 anno.remove()
                 return
         if (math.fabs(f(mid) - 0)) < e:
