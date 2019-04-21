@@ -1,9 +1,11 @@
 #!/bin/env python
 import numpy as np
+import matplotlib
+matplotlib.use('QT5Agg')
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D # noqa
 import matplotlib.pyplot as plt
-# import matplotlib.animation as animation
+import matplotlib.animation as animation
 from autograd import value_and_grad
 from matplotlib.widgets import TextBox
 import matplotlib.gridspec as gridspec
@@ -37,7 +39,7 @@ def gradient_descent(start, end, f, interval, step, acc, init):
                            linewidth=0, antialiased=False) # noqa
     maxima = np.array([0., 0.]).reshape(-1, 1)
     ax.plot(*maxima, f(*maxima), 'r*', markersize=20)
-    print(*maxima, '\n', f(*maxima))
+    # print(*maxima, '\n', f(*maxima))
     # ax.set_zlim(-0.1, 0.6)
     ax.view_init(azim=60, elev=10.)
     # fig.colorbar(surf, shrink=0.5, aspect=5)
@@ -45,13 +47,17 @@ def gradient_descent(start, end, f, interval, step, acc, init):
     ax.set_ylabel('$y$')
     ax.set_zlabel('$z$')
     ax.legend(loc='upper left')
+    fig.canvas.draw()
 
-    climb(func=f, init=init, epsilon=acc, lambda_0=step) # noqa
+    path = climb(func=f, init=init, epsilon=acc, lambda_0=step) # noqa
     # print(len(path[0]))
 
-    # animation.FuncAnimation(plt.figure(), animate(path, f),
-    #                         frames=path.shape[1], interval=interval,
-    #                         repeat_delay=200, blit=True)
+    ani = animation.FuncAnimation(fig, animate(path, f),
+                            frames=path.shape[1], interval=interval,
+                            repeat_delay=200, blit=True)
+    # ani.save('ani.html')
+    fig.canvas.draw()
+    # plt.show()
 
 
 def submit(val):
@@ -124,17 +130,29 @@ except: # noqa
 
 
 def climb(func, init, epsilon, lambda_0):
+    path = []
+    path.append([init[0], ])
+    path.append([init[1], ])
     xy = init
-    ax.plot([xy[0], ], [xy[1], ], [func(*xy), ], 'b*', markersize=20)
-    fig.canvas.draw()
     func_grad = value_and_grad(lambda args: func(*args))
     l2 = lambda g: np.sqrt(float(g[0])**2 + float(g[1])**2) # noqa
     grad = func_grad(xy)[1]
     while l2(grad) >= epsilon:
         xy += np.array([float(grad[0]), float(grad[1])]) * lambda_0
-        ax.plot([xy[0], ], [xy[1], ], [func(*xy), ], 'bo', markersize=10)
-        fig.canvas.draw()
+        path[0].append(xy[0])
+        path[1].append(xy[1])
         grad = func_grad(xy)[1]
+    return np.array(path)
+    
 
+def animate(path, f):
+    def foo(i):
+        line.set_data(*path[:, :i+1])
+        line.set_3d_properties(f(*path[:, :i+1]))
+        point.set_data(*path[:, i:i+1])
+        point.set_3d_properties(f(*path[:, i:i+1]))
+        return line, point
+    return foo
 
+    
 plt.show()

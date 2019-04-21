@@ -117,10 +117,10 @@ def adaptive_numerical_integration(target, a, b, sleep_time=0.01, e=0.001):
 
     def draw():
         ax.clear()
-        plt.plot(X, Y, c='r', label="$\\frac{\\sin (x)}{x}$", linewidth=3)
-        plt.axhline(0, color='gray', linewidth=1.5)
-        plt.axvline(0, color='gray', linewidth=1.5)
-        plt.legend(loc='upper right')
+        ax.plot(X, Y, c='r', label="$\\frac{\\sin (x)}{x}$", linewidth=3)
+        ax.axhline(0, color='gray', linewidth=1.5)
+        ax.axvline(0, color='gray', linewidth=1.5)
+        ax.legend(loc='upper right')
         for i in range(len(points) - 1):
             ax.add_patch(patches.Polygon([[points[i], 0],
                                           [points[i+1], 0],
