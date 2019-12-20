@@ -1,33 +1,39 @@
 #lt i3 config file
 # see http://i3wm.org/docs/userguide.html for a complete reference!
 
-# Super key(mod4 =windows logo key/Command key)
-set $mod Mod4
+# Super key(mod4 =windows logo key/Command key, mod1 = alt)
+set $mod Mod1
+set $mod_sup Mod4
 
 #===autostart parograms===
-exec --no-startup-id mate-power-manager
-exec --no-startup-id nm-applet
-exec --no-startup-id fcitx
+# fix dbus enviroment variables when runing inside Xephyr
+exec_always --no-startup-id export $(dbus-launch)
+
+# exec --no-startup-id mate-power-manager
 # 设置透明须先安装xcompmgr/compton，并在此指定软件和透明度（默认0.75），sleep保证transset在其所设置的软件之后启动，根据情况调节大小
-# exec --no-startup-id xcompmgr &
-exec_always --no-startup-id compton -f &
+exec --no-startup-id xcompmgr &
+# exec_always --no-startup-id compton -f &
 exec --no-startup-id sleep .3 && exec transset-df -n i3bar 0.75 
 # albert
-exec_always --no-startup-id albert&
+exec_always --no-startup-id albert &
+bindsym $mod+d exec --no-startup-id albert show
+# exec --no-startup-id sleep .5 && nm-applet
+exec --no-startup-id sleep .5 && fcitx &
+
 # exec --no-startup-id ss-qt5&
 
 # for root Authentication
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
+# exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 & eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 
 # touchpad: set tap as click
 # https://www.reddit.com/r/i3wm/comments/516e8c/tap_to_click_touchpad/
-exec xinput set-prop 14 287 1
+# exec xinput set-prop 14 287 1
 #===appearance===
 
 #---wallpaper---
 
 # static mode
-exec --no-startup-id feh --bg-scale /home/kevin/Pictures/wallpapers/wallpaper.jpg
+exec --no-startup-id feh --bg-scale $HOME'/.config/i3/wallpapers/Rice Paddy.jpeg'
 
 # random mode
 # exec ~/.config/i3/wallpaper.sh &
@@ -109,10 +115,11 @@ for_window [window_role="gimp-toolbox"] floating enable; layout stacking; move r
 #===programs shortcuts===
 
 # terminal
-bindsym $mod+Return exec konsole
+bindsym $mod+Return exec --no-startup-id tilix
 
 # browsers
-bindsym $mod+Shift+c exec chromium
+bindsym $mod+Shift+c exec firefox
+
 
 # printscreen(use "scrot".Print=PrtSc/PrintScreen)
 bindsym $mod+Print exec scrot
@@ -137,7 +144,7 @@ bindsym $mod+e exec --no-startup-id nautilus
 
 # switch to near workspace
 bindsym $mod+Tab workspace prev
-bindsym mod1+Tab workspace next
+bindsym $mod_sup+Tab workspace next
 
 # switch to workspace
 bindsym $mod+1 workspace 1
@@ -149,7 +156,7 @@ bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
+bindsym $mod+10 workspace 10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
@@ -161,7 +168,7 @@ bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+7 move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+10 move container to workspace 10
 
 
 #===window control===
@@ -173,7 +180,7 @@ bindsym $mod+f fullscreen toggle
 bindsym $mod+Shift+space floating toggle
 
 # kill focused window($mod4=Alt)
-bindsym mod1+F4 kill
+bindsym $mod+w kill
 
 # hide | show window(minus is "-" and plus is "+".)
 bindsym $mod+minus move scratchpad
@@ -182,7 +189,7 @@ bindsym $mod+plus scratchpad show
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
 bindsym $mod+t layout tabbed
-bindsym $mod+c layout toggle split
+bindsym $mod+g layout toggle split
 
 # change border style
 bindsym $mod+u border none
@@ -246,7 +253,7 @@ mode "$mode_system" {
 
 # screen off | sleep | shutdown(time unit: seconds)
 #exec --no-startup-id xset dpms 300 1357 6789
-exec --no-startup-id xset dpms 300
+# exec --no-startup-id xset dpms 300
 
 
 #===manage i3===
@@ -263,7 +270,7 @@ bindsym $mod+Shift+s restart
             bindsym Escape mode "default"
     }
 
-bindsym Ctrl+mod1+l mode "i3lock: Return to lock/Escape to Cancel"
+bindsym Ctrl+$mod_sup+l mode "i3lock: Return to lock/Escape to Cancel"
 
 # exit i3
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
