@@ -7,13 +7,13 @@ set $mod_sup Mod4
 
 #===autostart parograms===
 # fix dbus enviroment variables when runing inside Xephyr
-exec_always --no-startup-id export $(dbus-launch)
+exec --no-startup-id sleep .4 && export $(dbus-launch)
 
 # exec --no-startup-id mate-power-manager
 # 设置透明须先安装xcompmgr/compton，并在此指定软件和透明度（默认0.75），sleep保证transset在其所设置的软件之后启动，根据情况调节大小
 exec --no-startup-id xcompmgr &
 # exec_always --no-startup-id compton -f &
-exec --no-startup-id sleep .3 && exec transset-df -n i3bar 0.75 
+exec --no-startup-id sleep .3 && exec transset-df -n i3bar 0.9
 # albert
 exec_always --no-startup-id albert &
 bindsym $mod+d exec --no-startup-id albert show

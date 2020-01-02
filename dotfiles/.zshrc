@@ -12,7 +12,7 @@ export ZSH=/home/kevin/.oh-my-zsh
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # ZSH_THEME="agnoster"
-ZSH_THEME="powerlevel9k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -87,6 +87,9 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+##################################################
+# Alias from previous HASSEE laptop (Archlinux)  #
+##################################################
 alias cnpm="npm --registry=https://registry.npm.taobao.org \
 --cache=$HOME/.npm/.cache/cnpm \
 --disturl=https://npm.taobao.org/dist \
@@ -98,7 +101,7 @@ alias psg="ps -aux|grep"
 alias kills="sudo kill -s 9"
 alias update="yay -Syu"
 alias cl="clear"
-alias yay="yay --aururl https://aur.tuna.tsinghua.edu.cn/"
+alias yay="yay --aururl https://aur.tuna.tsinghua.edu.cn/ --editmenu"
 alias gc="git clone"
 # vnc server the current xorg desktop environment
 alias vncX="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
@@ -111,8 +114,7 @@ alias cudaPython='optirun python'
 alias nvidiaChrome="optirun -b primus google-chrome-stable --disable-gpu-sandbox"
 alias enw='emacs -nw'
 # fix filezilla carsh when using wayland
-alias filezilla='GDK_BACKEND=x11 filezilla' 
-# yaourt
+alias filezilla='GDK_BACKEND=x11 filezilla'
 export VISUAL="vim"
 # acm run
 alias acmRun='_acmRun(){ g++ -std=c++11 -o $1.o -Wall $1.cpp; ./$1.o > o.txt; subl o.txt&;}; _acmRun'
@@ -144,7 +146,7 @@ export LESS_TERMCAP_so=$'\E[1m\E[33m\E[44m'
 
 # fix AVD manager
 export ANDROID_EMULATOR_USE_SYSTEM_LIBS=1
- 
+
 eval $(thefuck --alias)
 # You can use whatever you want as an alias, like for Mondays:
 eval $(thefuck --alias FUCK)
@@ -220,3 +222,87 @@ function replace_chromium_icons () {
 }
 # for lua packages installed locally by luarocks
 eval "$(luarocks path)"
+
+#####################################################
+# ZSH configs from Archlinux in ChromeOS (Crostini) #
+#####################################################
+alias fix_audio='systemctl --user restart cros-pulse-config'
+# HiDPI
+# export GDK_SCALE=1.2
+# export GDK_DPI_SCALE=1.2
+alias starti3='unset DBUS_SESSION_BUS_ADDRESS && unset XDG_RUNTIME_DIR && Xephyr -br -ac -noreset -screen 1920x1080 -dpi 150 -resizeable :2 >/dev/null 2>&1 &; sleep 1s && DISPLAY=:2 i3 >/dev/null 2>&1 &'
+alias exiti3='pkill Xephyr && pkill i3'
+alias startsogou='export $(dbus-launch) && fcitx >/dev/null 2>&1 &; sogou-qimpanel >/dev/null 2>&1 &'
+# some configs come from .bashrc
+# sogou-fcitx
+export GTK_THEME=Adapta-Nokto-Eta
+export XIM_PROGRAM=fcitx
+export XIM=fcitx
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export QT4_IM_MODULE=fcitx
+export QT5_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+fcitx-autostart > /dev/null 2>&1 &
+sogou-qimpanel > /dev/null 2>&1 &
+
+# must be run in weston (wayland)!!
+# And sommerilier is not allowed run fullscreen GUI in chrome OS
+alias x11docker_gnome='x11docker --desktop --gpu --init=systemd --user=root --fullscreen x11docker/gnome'
+
+# if used Tilix, switch to zsh
+if [[ -n ${TILIX_ID} ]] && [[ -z ${WESTON_CONFIG_FILE} ]]; then
+	zsh
+fi
+
+############################################
+# Some configs come from CroSh in ChromeOS #
+############################################
+# Sommelier environment variables + daemon
+# See https://github.com/dnschneid/crouton/wiki/Sommelier-(A-more-native-alternative-to-xiwi)
+if [ ! -d /tmp/.X11-unix ]; then
+mkdir /tmp/.X11-unix
+fi
+sudo chmod -R 1777 /tmp/.X11-unix
+sudo chown root:root /tmp/.X11-unix
+alias startsommelier="set -a && source ~/.sommelier.env && set +a && initsommelier"
+# XDG Base Directory Specification Environment Variables
+# See https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+export XDG_DATA_HOME=/home/chronos/user/.local/share
+export XDG_CONFIG_HOME=/home/chronos/user/.config
+export XDG_DATA_DIRS=/usr/local/share
+export XDG_CONFIG_DIRS=/usr/local/etc/xdg
+export XDG_CACHE_HOME=/home/chronos/user/.cache
+export XDG_RUNTIME_DIR=/var/run/chrome
+export PATH=$PATH:/home/chronos/user/.local/bin
+
+# FIX xwayland error:
+# _XSERVTransSocketUNIXCreateListener: ...SocketCreateListener() failed
+# _XSERVTransMakeAllCOTSServerListeners: server already running
+# Ref: https://www.x.org/wiki/FAQErrorMessages/
+fix_xwayland () {
+	echo 'Kill all Xwayland to fix issus: '`netstat -lnp 2>/dev/null | awk '$9 ~ /Xwayland/ {print $9,$10}'` && kill `netstat -lpn 2>/dev/null | awk '$9 ~ /Xwayland/ {print $9,$10}' | awk -F '[ /]' '{printf $1" "}'`
+}
+export GDK_PIXBUF_MODULEDIR=/usr/local/lib64/gdk-pixbuf-2.0/2.10.0/loaders
+export GDK_PIXBUF_MODULE_FILE=/usr/local/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache
+#######################################################
+# Some configs come from Ubuntu in ChromeOS (Crouton) #
+#######################################################
+alias kvm_run_arch='sudo xiwi qemu-system-x86_64 -boot d -enable-kvm -cdrom $HOME/Downloads/archlinux-2019.12.01-x86_64.iso -m 1024 -cpu kvm64 -smp cores=4'
+alias rtk_run_alpine='sudo rkt run --no-overlay=true --insecure-options=image docker://alpine --net=host --interactive'
+alias kvm_run_arch='sudo qemu-system-x86_64 -boot d -enable-kvm -cdrom $HOME/Downloads/archlinux-2019.12.01-x86_64.iso -m 1024 -cpu kvm64 -smp cores=4'
+alias kvm_run_arch_xiwi='sudo xiwi qemu-system-x86_64 -boot d -enable-kvm -cdrom $HOME/Downloads/archlinux-2019.12.01-x86_64.iso -m 1024 -cpu kvm64 -smp cores=4'
+# you should unload vbox before logging out
+# !!! and you must use `vmc stop termina` when you want to use vbox
+alias unload_vbox='sudo /sbin/rmmod vboxpci && sudo rmmod vboxnetadp && sudo rmmod vboxnetflt && sudo rmmod vboxdrv'
+
+# sommelier
+startsommelier () {
+        export GDK_BACKEND=wayland
+        export CLUTTER_BACKEND=wayland
+        export XDG_RUNTIME_DIR='/var/run/chrome'
+        export WAYLAND_DISPLAY=wayland-0
+        export DISPLAY=:0
+        sudo chown root:root /tmp/.X11-unix
+        $HOME/Downloads/sommelier/sommelier -X --x-display=:0 --no-exit-with-child /bin/sh -c $HOME/Downloads/sommelier/sommelierrc &
+}
