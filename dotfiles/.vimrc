@@ -300,6 +300,8 @@ endfunc
 
 " 用 ,. 组合键代替 Esc
 inoremap ,. <esc>
+vnoremap ,. <esc>
+nnoremap ,. <esc>
 
 " vim-lsp 配置
 if executable('pyls')

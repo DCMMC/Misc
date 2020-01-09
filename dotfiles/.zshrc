@@ -222,6 +222,8 @@ function replace_chromium_icons () {
 }
 # for lua packages installed locally by luarocks
 eval "$(luarocks path)"
+alias pastebin="curl -F 'vimcn=<-' https://cfp.vim-cn.com/"
+alias getip='curl -i cip.cc'
 
 #####################################################
 # ZSH configs from Archlinux in ChromeOS (Crostini) #
