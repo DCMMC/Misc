@@ -287,11 +287,13 @@ fix_xwayland () {
 }
 export GDK_PIXBUF_MODULEDIR=/usr/local/lib64/gdk-pixbuf-2.0/2.10.0/loaders
 export GDK_PIXBUF_MODULE_FILE=/usr/local/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache
+alias pdf='echo "removing old adobe user configs" && rm -r ~/.adobe/Acrobat && acroread'
+alias set_cursor_breeze='gsettings set org.gnome.desktop.interface cursor-theme Breeze_Snow'
 #######################################################
 # Some configs come from Ubuntu in ChromeOS (Crouton) #
 #######################################################
 alias kvm_run_arch='sudo xiwi qemu-system-x86_64 -boot d -enable-kvm -cdrom $HOME/Downloads/archlinux-2019.12.01-x86_64.iso -m 1024 -cpu kvm64 -smp cores=4'
-alias rtk_run_alpine='sudo rkt run --no-overlay=true --insecure-options=image docker://alpine --net=host --interactive'
+alias rkt_run_alpine='sudo rkt run --no-overlay=true --insecure-options=image docker://alpine --net=host --interactive'
 alias kvm_run_arch='sudo qemu-system-x86_64 -boot d -enable-kvm -cdrom $HOME/Downloads/archlinux-2019.12.01-x86_64.iso -m 1024 -cpu kvm64 -smp cores=4'
 alias kvm_run_arch_xiwi='sudo xiwi qemu-system-x86_64 -boot d -enable-kvm -cdrom $HOME/Downloads/archlinux-2019.12.01-x86_64.iso -m 1024 -cpu kvm64 -smp cores=4'
 # you should unload vbox before logging out
