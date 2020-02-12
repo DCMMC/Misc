@@ -106,7 +106,7 @@ alias gc="git clone"
 # vnc server the current xorg desktop environment
 alias vncX="x0vncserver -display :0 -passwordfile ~/.vnc/passwd"
 # use privoxy to forward socks5 to http
-alias sshttp="export https_proxy='http://127.0.0.1:8118' && export http_proxy='http://127.0.0.1:8118' && export HTTPS_PROXY='http://127.0.0.1:8118' && export HTTP_PROXY='http://127.0.0.1:8118' && git config --global http.proxy socks5://127.0.0.1:1080 && git config --global https.proxy socks5://127.0.0.1:1080"
+alias sshttp="export ALL_PROXY=socks5h://localhost:1080 && export https_proxy='http://127.0.0.1:8118' && export http_proxy='http://127.0.0.1:8118' && export HTTPS_PROXY='http://127.0.0.1:8118' && export HTTP_PROXY='http://127.0.0.1:8118' && git config --global http.proxy socks5h://127.0.0.1:1080 && git config --global https.proxy socks5h://127.0.0.1:1080"
 alias unsshttp="unset all_proxy && unset ALL_PROXY && unset http_proxy && unset https_proxy && unset HTTP_PROXY && unset HTTPS_PROXY && git config --global --unset http.proxy && git config --global --unset https.proxy"
 alias nvidia-setting='optirun -b none nvidia-settings -c :8'
 alias cudaPython='optirun python'
