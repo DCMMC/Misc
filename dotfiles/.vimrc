@@ -38,9 +38,9 @@ Plug 'vim-airline/vim-airline'
 " Plug 'Integralist/vim-mypy'
 " Plug 'vim-scripts/indentpython.vim'
 " 语法检查
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 " shell in vim
-" 安装之后需要手动 cd ~/.vim/bundle/vimproc.vim && make
+" :Deol 打开内置终端
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'Shougo/deol.nvim'
 " Plug 'Shougo/vimshell.vim'
@@ -57,12 +57,18 @@ Plug 'Chiel92/vim-autoformat'
 "=== vim-trailing-whitespace将代码行最后无效的空格标红 ===
 Plug 'bronson/vim-trailing-whitespace'
 " Async Language Server Protocol plugin for vim8
+" 语法检查
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
+" use :LspInstallServer to autoinstall and config for vim-lsp while editing
+" a file with supported filetype
+Plug 'mattn/vim-lsp-settings'
 " Toggle window to maximum or restore
 Plug 'szw/vim-maximizer'
 " asynchronous completion framework for neovim/Vim8
 Plug 'Shougo/deoplete.nvim'
+" deoplete source for vim-lsp
+Plug 'lighttiger2505/deoplete-vim-lsp'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'zchee/deoplete-jedi'
@@ -261,7 +267,7 @@ set pyxversion=3
 " 语法高亮
 " 让 ale 对 py 文件使用 flake8
 " 记得 sudo pip install flake8
-let g:ale_linters = { 'python': ['flake8'], }
+" let g:ale_linters = { 'python': ['flake8'], }
 " Auto-check file for errors on write:
 let g:PyFlakeOnWrite = 1
 " let g:flake8_show_in_gutter = 1
@@ -304,6 +310,7 @@ vnoremap ,. <esc>
 nnoremap ,. <esc>
 
 " vim-lsp 配置
+let g:lsp_auto_enable = 1
 if executable('pyls')
     " pip install python-language-server
     au User lsp_setup call lsp#register_server({
@@ -323,11 +330,27 @@ if executable('ccls')
       \ })
 endif
 
+" key binding for vim-lsp
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=yes
+    nmap <buffer> ld <plug>(lsp-definition)
+    nmap <buffer> lr <plug>(lsp-rename)
+    " refer to doc to add more commands
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 
 " Toggle window to maximum or restore
-nnoremap <C-m> :MaximizerToggle!<CR>
+let g:maximizer_set_default_mapping = 0
+nnoremap <S-M> :MaximizerToggle!<CR>
 
 " exit terminal mode in deol buffer
 " tnoremap <ESC>   <C-\><C-n>
