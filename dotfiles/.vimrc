@@ -283,6 +283,9 @@ let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__'] "ignore files in NERDTree
 " 显示行号
 set nu
 
+" alias of Deol command
+cnoreabbrev vimshell Deol
+
 " Python 代码格式化
 " 需要 sudo pip install yapf
 autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf(" --style pep8")<CR>
