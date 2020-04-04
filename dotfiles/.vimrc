@@ -24,6 +24,10 @@ Plug 'DCMMC/caw.vim'
 " Plug 'scrooloose/nerdcommenter'
 " 缩进指示线
 Plug 'Yggdroot/indentLine'
+
+" fuzzy finder
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+
 " Sublime Text 3 color scheme
 Plug 'ErichDonGubler/vim-sublime-monokai'
 " 自动补全括号
@@ -71,13 +75,13 @@ Plug 'Shougo/deoplete.nvim'
 Plug 'lighttiger2505/deoplete-vim-lsp'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
-" Plug 'zchee/deoplete-jedi'
 Plug 'Shougo/deoplete-clangx'
-" if has('win32') || has('win64')
-"   Plug 'tbodt/deoplete-tabnine', { 'do': 'powershell.exe .\install.ps1' }
-" else
-"   Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
-" endif
+" 深度学习智能补全
+if has('win32') || has('win64')
+  Plug 'tbodt/deoplete-tabnine', { 'do': 'powershell.exe .\install.ps1' }
+else
+  Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+endif
 " 实时 md 渲染预览
 Plug 'iamcco/mathjax-support-for-mkdp'
 Plug 'iamcco/markdown-preview.vim'
@@ -124,10 +128,49 @@ syntax on
 " colorscheme solarized
 colorscheme sublimemonokai
 
-" 我修改过上面这个插件, 因为我只想 python 文件
-" 标示行末不必要的空格, 所以改了下 g:extra_whitespace_ignored_filetypes
-" 变成 g:extra_whitespace_filetypes
-let g:extra_whitespace_filetypes = ['python']
+" disable the feature that backspace in the end of the line
+" will remove eol
+" ref: `:help bs`
+" DCMMC: We can use `J` to join the curren line and the next line
+" a.k.a remove the line breaks (e.g. \n\r) in the end of the
+" current line
+set bs=indent,start
+
+" LeaderF
+" vim 8.1.1615+
+" set leader key from '\' to ','
+let mapleader = ","
+let g:Lf_WindowPosition = 'popup'
+let g:Lf_PreviewInPopup = 1
+let g:Lf_ShowDevIcons = 1
+let g:Lf_ShortcutF = "<leader>ff"
+noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
+noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
+" 需要 ctags, pacman -S ctags
+noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
+noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
+" 需要 gtags (aka GNU global), yay -S ctags python-pygments global
+" Sometimes you need `:Leaderf gtags --remove` to remove all the
+" gtags cache
+" https://zhuanlan.zhihu.com/p/64842373
+" 启用 ctags 和 pygments 扩展支持, 该配置文件路径仅在 archlinux 上测试
+" let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
+let g:Lf_Gtagsconf = '/usr/share/gtags/gtags.conf'
+" Auto `Leaderf gtags --update`
+" Max time of indexing is 3600s
+let g:Lf_IndexTimeLimit = 3600
+let g:Lf_GtagsAutoGenerate = 1
+let g:Lf_Gtagslabel = 'native-pygments'
+" 默认只对项目根目录下有这些文件(夹)的时候才使用 gtags 索引
+let g:Lf_RootMarkers = ['.git', '.svn', '.hg']
+noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
+noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
+noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
+
+" set filetypes to be ignored for highlight of trailing whitespace
+let g:extra_whitespace_ignored_filetypes = []
 
 " F3 autoformat
 noremap <F3> :Autoformat<CR>
@@ -159,8 +202,6 @@ let g:SimpylFold_docstring_preview=1
 " \ set softtabstop=4 |
 " \ set shiftwidth=4
 
-highlight BadWhitespace ctermbg=red guibg=red
-
 " web开发缩进
 au BufNewFile,BufRead *.js,*.html,*.css set tabstop=2
 au BufNewFile,BufRead *.js,*.html,*.css set softtabstop=2
@@ -186,8 +227,8 @@ au BufRead,BufNewFile *.c,*.h,*.cpp,*hpp set expandtab
 au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp set tabstop=4
 au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp set shiftwidth=4
 au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp set autoindent
-au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp match BadWhitespace /^\t\+/
-au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp match BadWhitespace /\s\+$/
+" au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp match BadWhitespace /^\t\+/
+" au BufRead,BufNewFile *.c,*.h,*.cpp,*.hpp match BadWhitespace /\s\+$/
 au         BufNewFile *.c,*.h,*.cpp,*.hpp set fileformat=unix
 au BufRead,BufNewFile *.c,*.h,,*.cpp,*.hpp let b:comment_leader = '/* '
 
@@ -201,8 +242,9 @@ au BufRead,BufNewFile *.java match BadWhitespace /\s\+$/
 au         BufNewFile *.java set fileformat=unix
 au BufRead,BufNewFile *.java let b:comment_leader = '//'
 
-" 标示不必要的空白字符
-" au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+" indentLine
+let g:indentLine_concealcursor = ''
+let g:indentLine_conceallevel = 2
 
 " 支持 utf-8
 set encoding=utf-8
@@ -262,6 +304,12 @@ set pyxversion=3
 " 	activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
 " 	execfile(activate_this, dict(__file__=activate_this))
 " EOF
+
+" tabnine
+call deoplete#custom#var('tabnine', {
+\ 'line_limit': 700,
+\ 'max_num_results': 10,
+\ })
 
 " ale 异步语法检查
 " 语法高亮
@@ -358,11 +406,3 @@ nnoremap <S-M> :MaximizerToggle!<CR>
 " exit terminal mode in deol buffer
 " tnoremap <ESC>   <C-\><C-n>
 tnoremap ,.  <C-\><C-n>
-
-" see :help 'backspace' and
-" https://vi.stackexchange.com/questions/2162/why-doesnt-the-backspace-key-work-in-insert-mode
-set backspace=indent,eol,start
-
-" enable quotes in json files
-" https://github.com/Yggdroot/indentLine/issues/172
-autocmd Filetype json let g:indentLine_enabled = 0
