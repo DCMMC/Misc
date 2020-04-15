@@ -168,6 +168,7 @@ noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand
 noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
 noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
 noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
+noremap <leader>fg :<C-U><C-R>=printf("Leaderf gtags --all")<CR><CR>
 
 " set filetypes to be ignored for highlight of trailing whitespace
 let g:extra_whitespace_ignored_filetypes = []
