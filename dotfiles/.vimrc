@@ -1,5 +1,7 @@
 set laststatus=2
 set t_Co=256
+
+set wildmenu
 " vim 版本必须 >= 8.0, 并且 +python
 
 " Automatic installation for vim-plug
@@ -155,7 +157,7 @@ noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
 " https://zhuanlan.zhihu.com/p/64842373
 " 启用 ctags 和 pygments 扩展支持, 该配置文件路径仅在 archlinux 上测试
 " let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
-" let g:Lf_Gtagsconf = '/usr/share/gtags/gtags.conf'
+let g:Lf_Gtagsconf = '/usr/share/gtags/gtags.conf'
 " Auto `Leaderf gtags --update`
 " Max time of indexing is 3600s
 let g:Lf_IndexTimeLimit = 3600
