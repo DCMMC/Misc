@@ -4,10 +4,21 @@ set t_Co=256
 set wildmenu
 " vim 版本必须 >= 8.0, 并且 +python
 
+" set pythonthreedll for vim with python/dyn support in windows.
+if has('win32') || has('win64')
+  let pythonthreedllhome = join(split(split(system('where python3.exe'), '\n')[0], '\\')[0:-2], '\')
+  let pythonthreedll = 'python3.dll'
+endif
+
 " Automatic installation for vim-plug
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if empty(glob('~/.vim/autoload/plug.vim')) && empty(glob('$HOME/vimfiles/autoload/plug.vim'))
+  if has('win32') || has("win64")
+    silent exe "!mkdir ".$HOME."\\vimfiles\\autoload 2>NUL"
+    silent exe "!curl -o ".$HOME."\\vimfiles\\autoload\\plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  else
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  endif
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
   " Install neovim
   silent !pip3 install --user neovim
@@ -411,3 +422,9 @@ nnoremap <S-M> :MaximizerToggle!<CR>
 " exit terminal mode in deol buffer
 " tnoremap <ESC>   <C-\><C-n>
 tnoremap ,.  <C-\><C-n>
+
+set tabstop=2
+set shiftwidth=2
+set autoindent
+set expandtab
+set smartindent
