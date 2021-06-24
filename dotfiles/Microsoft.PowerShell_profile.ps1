@@ -9,7 +9,9 @@ Import-Module oh-my-posh
 Import-Module PSReadLine
 
 # 设置主题为 Paradox
-Set-Theme Paradox
+# Set-Theme Paradox
+# https://github.com/microsoft/terminal/issues/9237#issuecomment-798913706
+Set-PoshPrompt Paradox
 
 # 设置预测文本来源为历史记录
 Set-PSReadLineOption -PredictionSource History
